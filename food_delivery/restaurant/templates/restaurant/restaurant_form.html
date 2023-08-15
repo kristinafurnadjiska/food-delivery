@@ -1,0 +1,19 @@
+{% extends "shared/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block header %}
+{% include 'shared/header-restaurant.html' %}
+{% endblock header %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+  <form enctype="multipart/form-data" method="POST">
+    {% csrf_token %}
+    <fieldset class="form-group">
+      <legend class="border-bottom mb-4">Restaurant Setup</legend>
+      {{ form|crispy }}
+    </fieldset>
+    <button class="btn btn-primary" type="submit">Save</button>
+  </form>
+</div>
+{% endblock content %}

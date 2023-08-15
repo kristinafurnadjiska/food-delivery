@@ -1,0 +1,44 @@
+{% extends "shared/base.html" %}
+
+{% block header %}
+{% include 'shared/header-restaurant.html' %}
+{% endblock %}
+
+{% block content%}
+<div class="container pb-5 flex-fill">
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-8 col-sm-12 offset-md-1 p-4 text-center">
+      <h1>Foodie Goodie</h1>
+    </div>
+  </div>
+
+  <div class="row">
+    {% for item in items %}
+    <div class="col-md-4 col-lg-3 col-sm-6">
+      <div class="card m-3">
+        <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+          <div style="height: 180px;">
+            <img src="{{ item.image.url }}" class="object-cover object-center w-100" height="180" />
+          </div>
+          <a href="#!">
+            <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+          </a>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ item.name }}</h5>
+          <div style="height: 90px;" class="overflow-hidden">
+            <p class="card-text">{{ item.description }}</p>
+          </div>
+          <p class="card-text">{{ item.price }} MKD</p>
+
+          <div class="row">
+            <a class="btn btn-sm btn-danger">Remove</a>
+            <a class="btn btn-sm btn-primary">Edit</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

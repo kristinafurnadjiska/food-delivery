@@ -1,0 +1,33 @@
+{% extends "shared/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block header %}
+{% include 'shared/header-restaurant.html' %}
+{% endblock header %}
+
+{% block content %}
+<article class="container">
+  <div class="h-100 d-flex flex-column justify-content-center align-items-center mt-5">
+    <h1>{{ object.name }}</h1>
+    <img height="300" class="rounded-circle article-img" src="{{ object.image.url }}">
+    <div class="container mt-4">
+      <div class="article-metadata text-center">
+        <h4 class="mr-2"><b>Owner:</b> {{ object.owner }}</h4>
+        <h5 class="mr-2"><b>Address:</b> {{ object.address }}</h5>
+        <!-- {% if object.author == user %}
+      <div>
+        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
+        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
+      </div>
+      {% endif %} -->
+      </div>
+      <p class="text-center mt-4">{{ object.description }}</p>
+    </div>
+
+    <div class="row">
+      <a class="btn btn-primary" href="{% url 'restaurant-preview'  %}">Meals</a>
+      <a class="btn btn-info" href="{% url 'restaurant-edit' %}">Edit</a>
+    </div>
+  </div>
+</article>
+{% endblock content %}
