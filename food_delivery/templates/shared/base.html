@@ -19,8 +19,10 @@
 <body>
   {% block header %}
   {% endblock header %}
-  {% block content %}
-  {% endblock content %}
+  <div class="pt-5 pb-5">
+    {% block content %}
+    {% endblock content %}
+  </div>
   {% include 'shared/footer.html' %}
 
   <!-- JQuery -->

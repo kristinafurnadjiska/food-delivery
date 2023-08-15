@@ -1,17 +1,9 @@
-from typing import Any, Optional
-from django.db import models
 from django.shortcuts import render, redirect
 from django.views import View
 from .models import Restaurant, Meal
 from users.models import Profile
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import (
-    ListView,
-    DetailView,
-    CreateView,
-    UpdateView,
-    DeleteView
-)
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import CreateView, UpdateView, DeleteView
 
 class Index(View):
     def get(self, request):
@@ -62,3 +54,26 @@ class RestaurantUpdateView(LoginRequiredMixin, UpdateView):
         owner = Profile.objects.get(user=self.request.user.pk)
         restaurant = Restaurant.objects.get(owner=owner.pk)
         return restaurant
+
+class MealCreateView(LoginRequiredMixin, CreateView):
+    success_url = '/restaurants/preview'
+    template_name = 'meals/meal_form.html'
+    model = Meal
+    fields = ['name', 'description', 'image', 'price', 'category']
+
+    def form_valid(self, form):
+        owner = Profile.objects.get(user=self.request.user.pk)
+        restaurant = Restaurant.objects.get(owner = owner.pk);
+        form.instance.restaurant = restaurant
+        return super().form_valid(form)
+
+class MealEditView(LoginRequiredMixin, UpdateView):
+    success_url = '/restaurants/preview'
+    model = Meal
+    template_name = 'meals/meal_form.html'
+    fields = ['name', 'description', 'price', 'image', 'category']
+
+class MealDeleteView(LoginRequiredMixin, DeleteView):
+    model = Meal
+    template_name = 'meals/meal_confirm_delete.html'
+    success_url = '/restaurants/preview'

@@ -1,0 +1,22 @@
+{% extends "shared/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block header %}
+{% include 'shared/header-restaurant.html' %}
+{% endblock header %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+  <form method="POST">
+    {% csrf_token %}
+    <fieldset class="form-group">
+      <legend class="border-bottom mb-4">Delete Meal</legend>
+      <h2>Are you sure you want to delete the meal "{{ object.name }}"</h2>
+    </fieldset>
+    <div class="form-group">
+      <button class="btn btn-danger" type="submit">Yes, Delete</button>
+      <a class="btn btn-secondary" href="{% url 'restaurant-preview'  %}">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock content %}

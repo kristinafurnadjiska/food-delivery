@@ -12,6 +12,10 @@
     </div>
   </div>
 
+  <div class="d-flex flex-row justify-content-end">
+    <a class="btn btn-primary" href="{% url 'meals-create' %}">Add new meal</a>
+  </div>
+
   <div class="row">
     {% for item in items %}
     <div class="col-md-4 col-lg-3 col-sm-6">
@@ -32,8 +36,8 @@
           <p class="card-text">{{ item.price }} MKD</p>
 
           <div class="row">
-            <a class="btn btn-sm btn-danger">Remove</a>
-            <a class="btn btn-sm btn-primary">Edit</a>
+            <a class="btn btn-sm btn-danger" href="{% url 'meals-delete' item.id %}">Remove</a>
+            <a class="btn btn-sm btn-primary" href="{% url 'meals-update' item.id %}">Edit</a>
           </div>
         </div>
       </div>
