@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'client',
     'restaurant',
     'users',
+    'mathfilters',
     'crispy_forms',
     'crispy_bootstrap4',
     'django.contrib.admin',

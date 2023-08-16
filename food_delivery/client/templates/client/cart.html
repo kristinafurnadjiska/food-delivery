@@ -1,0 +1,55 @@
+{% extends 'shared/base.html' %}
+
+{% load mathfilters %}
+
+{% block header %}
+{% include 'shared/header-client.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="container mb-5">
+  <div class="row justify-content-center">
+    <h1 class="mt-4 mb-4">Order meals</h1>
+  </div>
+
+  {% if items %}
+
+  {% for item in items %}
+  <div class="card mb-3 mt-3" style="max-width: 1080px; height: 120px;">
+    <div class="row g-0">
+      <div class="col-md-3 overflow-hidden rounded-start">
+        <img src="{{ item.meal.image.url }}" height="120" class="w-100"
+          style="object-fit: cover; object-position: center;" />
+      </div>
+      <div class="col-md-7">
+        <div class="card-body">
+          <h5 class="card-title">{{ item.meal.name }}</h5>
+
+          <p>{{ item.quantity}} x {{ item.meal.price }} = {{ item.quantity|mul:item.meal.price}} MKD</p>
+
+        </div>
+      </div>
+      <div class="col-md-2 d-flex flex-column justify-content-center">
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+          <input hidden value="{{ item.meal.pk }}" name="item_id" />
+          <input hidden value="remove" name="action" />
+        </form>
+
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  <div class="d-flex flex-row justify-content-end mt-3 pr-5">
+    <h5>
+      <b>Total price:</b> {{ total }} MKD
+    </h5>
+  </div>
+
+  {% else %}
+  <h3 class="text-center">Your cart is empty. Go to meals and fill it!</h3>
+  {% endif %}
+</div>
+{% endblock %}

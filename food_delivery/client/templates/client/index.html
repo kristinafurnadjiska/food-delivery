@@ -1,0 +1,36 @@
+{% extends 'shared/base.html' %}
+
+{% block header %}
+{% include 'shared/header-client.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="container mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-sm-12 offset-md-1 p-4 text-center">
+      <h1>Online Food Delivery Service</h1>
+    </div>
+  </div>
+
+  {% for item in items %}
+  <a class="card mb-3 mt-3" style="max-width: 1080px;" href="{% url 'client-restaurant-preview' item.pk %}">
+    <div class="row g-0">
+      <div class="col-md-3">
+        <img src="{{ item.image.url }}" alt="Trendy Pants and Shoes" class="img-fluid rounded-start" />
+      </div>
+      <div class="col-md-9">
+        <div class="card-body">
+          <h5 class="card-title">{{ item.name }}</h5>
+          <p class="card-text overflow-hidden" style="max-height: 90px;">
+            {{ item.description }}
+          </p>
+          <p class="card-text">
+            <small class="text-muted">{{ item.address }}</small>
+          </p>
+        </div>
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}

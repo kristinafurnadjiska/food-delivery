@@ -4,6 +4,7 @@ from django.contrib.auth import views as auth_views
 
 from .forms import UserRegistrationForm
 from .models import Profile
+from client.models import Cart
 
 class Register(View):
   def get(self, request, *args, **kwargs): 
@@ -22,7 +23,8 @@ class Register(View):
       user = form.save()
 
       data = form.cleaned_data
-      Profile.objects.create(user=user, type=data['type'], address=data['address'])
+      profile = Profile.objects.create(user=user, type=data['type'], address=data['address'])
+      Cart.objects.create(owner=profile)
 
       return redirect('login')
     
@@ -41,5 +43,5 @@ class Login(auth_views.LoginView):
     if profile.is_owner():
       return '/restaurants/home'
     if profile.is_regular_user():
-      return '/order'
+      return '/'
     return super().get_success_url()
