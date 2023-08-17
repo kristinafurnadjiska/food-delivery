@@ -12,6 +12,12 @@
     </div>
   </div>
 
+  {% if not items %}
+  <div class="text-center">
+    <h3>Currently there are no available restaurants!</h3>
+  </div>
+  {% endif %}
+
   {% for item in items %}
   <a class="card mb-3 mt-3" style="max-width: 1080px;" href="{% url 'client-restaurant-preview' item.pk %}">
     <div class="row g-0">

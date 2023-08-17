@@ -16,6 +16,12 @@
     <a class="btn btn-primary" href="{% url 'meals-create' %}">Add new meal</a>
   </div>
 
+  {% if not items %}
+  <div class="text-center">
+    <h3>Currently there are no meals. Go and add some!</h3>
+  </div>
+  {% endif %}
+
   <div class="row">
     {% for item in items %}
     <div class="col-md-4 col-lg-3 col-sm-6">
