@@ -4,10 +4,14 @@ from django.contrib import messages
 from .models import Cart, CartItem
 from users.models import Profile
 from restaurant.models import Restaurant, Meal, Order, OrderItem
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import CreateView
 
-class Index(View):
+class Index(LoginRequiredMixin, UserPassesTestMixin, View):
+    def test_func(self):
+        profile = Profile.objects.get(user=self.request.user.pk)
+        return profile.is_regular_user()
+
     def get(self, request, *args, **kwargs):
         restaurants = Restaurant.objects.all()
 
@@ -17,7 +21,11 @@ class Index(View):
 
         return render(request, 'client/index.html', context)
     
-class Preview(View):
+class Preview(LoginRequiredMixin, UserPassesTestMixin, View):
+    def test_func(self):
+        profile = Profile.objects.get(user=self.request.user.pk)
+        return profile.is_regular_user()
+    
     def get(self, request, *args, **kwargs):
         id = kwargs['pk']
 
@@ -77,7 +85,11 @@ class Preview(View):
 
         return redirect('client-restaurant-preview', pk=id)
 
-class CartPreview(View):
+class CartPreview(LoginRequiredMixin, UserPassesTestMixin, View):
+    def test_func(self):
+        profile = Profile.objects.get(user=self.request.user.pk)
+        return profile.is_regular_user()
+
     def get(self, request):
         owner = Profile.objects.get(user=self.request.user.pk)  
         cart = Cart.objects.get(owner=owner)
@@ -110,11 +122,15 @@ class CartPreview(View):
 
         return redirect('client-cart')
 
-class OrderCreateView(LoginRequiredMixin, CreateView):
+class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     success_url = ''
     model = Order
     template_name = 'client/checkout_form.html'
     fields = ['address', 'method']
+
+    def test_func(self):
+        profile = Profile.objects.get(user=self.request.user.pk)
+        return profile.is_regular_user()
 
     def get(self, request, *args, **kwargs):
         owner = Profile.objects.get(user=self.request.user.pk)
@@ -143,6 +159,10 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
 
         return redirect('client-confirmation')
 
-class OrderConfirmation(View):
+class OrderConfirmation(LoginRequiredMixin, UserPassesTestMixin, View):
+    def test_func(self):
+        profile = Profile.objects.get(user=self.request.user.pk)
+        return profile.is_regular_user()
+    
     def get(self, request):
         return render(request, 'client/confirmation.html')

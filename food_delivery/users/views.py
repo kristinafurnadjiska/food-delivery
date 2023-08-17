@@ -45,3 +45,11 @@ class Login(auth_views.LoginView):
     if profile.is_regular_user():
       return '/'
     return super().get_success_url()
+  
+class Landing(View):
+  def get(self, request):
+    profile = Profile.objects.get(user=self.request.user.pk)
+    if profile.is_owner():
+      return redirect('restaurant-home')
+    
+    return redirect('client-index')

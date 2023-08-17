@@ -1,0 +1,19 @@
+{% extends 'shared/base.html' %}
+
+{% block header %}
+{% include 'shared/header-403.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="container mb-5">
+  <div class="row justify-content-center">
+    <div class="text-center">
+      <h1>Forbidden</h1>
+    </div>
+  </div>
+
+  <div class="text-center">
+    <h4>Oops! You are accessing site that you do not have permission for.</h4>
+  </div>
+</div>
+{% endblock %}
