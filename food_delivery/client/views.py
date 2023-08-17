@@ -3,9 +3,10 @@ from django.views import View
 from django.contrib import messages
 from .models import Cart, CartItem
 from users.models import Profile
-from restaurant.models import Restaurant, Meal
-from django.db.models import Count
- 
+from restaurant.models import Restaurant, Meal, Order, OrderItem
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import CreateView
+
 class Index(View):
     def get(self, request, *args, **kwargs):
         restaurants = Restaurant.objects.all()
@@ -59,7 +60,7 @@ class Preview(View):
         query = CartItem.objects.values_list('restaurant__pk', flat=True)
         l = list(query)
 
-        if not l.__contains__(meal.restaurant.pk):
+        if len(l) > 0 and not l.__contains__(meal.restaurant.pk):
             messages.info(request, 'Cannot add to current cart from different restaurant!')
 
             return redirect('client-restaurant-preview', pk=id)
@@ -108,3 +109,40 @@ class CartPreview(View):
         messages.success(request,'Successfully removed to cart')
 
         return redirect('client-cart')
+
+class OrderCreateView(LoginRequiredMixin, CreateView):
+    success_url = ''
+    model = Order
+    template_name = 'client/checkout_form.html'
+    fields = ['address', 'method']
+
+    def get(self, request, *args, **kwargs):
+        owner = Profile.objects.get(user=self.request.user.pk)
+        self.initial['address'] = owner.address
+        return super().get(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if not form.is_valid():
+            return self.form_invalid(form)
+
+        owner = Profile.objects.get(user=self.request.user.pk)
+        cart = Cart.objects.get(owner=owner)
+        items = CartItem.objects.filter(cart=cart).all()
+        price = sum([item.meal.price * item.quantity for item in items])
+    
+        data = self.request.POST.dict()
+        address = data['address']
+        method = data['method']
+        is_paid = method == 'card';
+
+        order = Order.objects.create(method=method, price=price, address=address, is_paid=is_paid)
+        for item in items:
+            OrderItem.objects.create(order=order, meal=item.meal, quantity=item.quantity)
+            item.delete()
+
+        return redirect('client-confirmation')
+
+class OrderConfirmation(View):
+    def get(self, request):
+        return render(request, 'client/confirmation.html')

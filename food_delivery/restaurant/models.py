@@ -27,9 +27,29 @@ class Meal(models.Model):
         return self.name
     
 class Order(models.Model):
+    PAY_CHOICES = [
+        ('cash', 'Pay with cash'),
+        ('card', 'Pay with card')
+    ]
+
+    STATUS_CHOICES = [
+        ('Active', 'Active'),
+        ('In progress', 'In progress'),
+        ('Delivering', 'Delivering'),
+        ('Delivered', 'Delivered'),
+    ]
+
     created_on = models.DateTimeField(auto_now_add=True)
+    method = models.CharField(max_length=100, choices=PAY_CHOICES)
+    status = models.CharField(max_length=100, choices=STATUS_CHOICES, default='Active')
     price = models.IntegerField()
-    items = models.ManyToManyField(Meal, related_name='items', blank=True)
+    address = models.CharField(max_length=100)
+    is_paid = models.BooleanField(default=False)
 
     def __str__(self):
         return f'Order: {self.created_on.strftime("%b %d %I: %M %p")}'
+    
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
+    quantity = models.IntegerField()

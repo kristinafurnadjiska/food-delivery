@@ -1,0 +1,78 @@
+{% extends "shared/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block header %}
+{% include 'shared/header-client.html' %}
+{% endblock header %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+  <form enctype="multipart/form-data" method="POST">
+    {% csrf_token %}
+    <fieldset class="form-group">
+      <legend class="border-bottom mb-4">Checkout</legend>
+      {{ form|crispy }}
+    </fieldset>
+
+    <fieldset id="card_details" class="form-group">
+      <div class="form-group">
+        <label for="id_card_holder" class="requiredField">
+          Card Holder
+          <span class="asteriskField">*</span>
+        </label>
+        <div>
+          <input type="text" name="card_holder" class="textinput form-control" required="" id="id_card_holder">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="id_card_number" class="requiredField">
+          Card Number
+          <span class="asteriskField">*</span>
+        </label>
+        <div>
+          <input type="text" name="card_holder" class="textinput form-control" required="" id="id_card_number"
+            placeholder="1234 1234 1234 1234">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="id_ccv" class="requiredField">
+            CCV
+            <span class="asteriskField">*</span>
+          </label>
+          <div>
+            <input type="text" name="card_holder" class="textinput form-control" required="" id="id_ccv">
+          </div>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="id_expiry" class="requiredField">
+            Expiry
+            <span class="asteriskField">*</span>
+          </label>
+          <div>
+            <input type="text" name="card_holder" class="textinput form-control" required="" id="id_expiry">
+          </div>
+        </div>
+      </div>
+    </fieldset>
+    <button class="btn btn-primary" type="submit">Send</button>
+  </form>
+</div>
+
+<script>
+  window.addEventListener("load", (event) => {
+    const method = document.getElementById("id_method");
+    const details = document.getElementById("card_details");
+
+    details.style.display = 'none';
+
+    method.addEventListener('change', function (event) {
+      const isCash = event.target.value === 'cash'
+      details.style.display = isCash ? 'none' : 'block';
+    })
+  });
+</script>
+{% endblock content %}
