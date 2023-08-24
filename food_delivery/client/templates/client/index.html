@@ -19,10 +19,11 @@
   {% endif %}
 
   {% for item in items %}
-  <a class="card mb-3 mt-3" style="max-width: 1080px;" href="{% url 'client-restaurant-preview' item.pk %}">
+  <a class="card mb-3 mt-3 bg-card" style="max-width: 1080px;" href="{% url 'client-restaurant-preview' item.pk %}">
     <div class="row g-0">
       <div class="col-md-3">
-        <img src="{{ item.image.url }}" alt="Trendy Pants and Shoes" class="img-fluid rounded-start" />
+        <img src="{{ item.image.url }}" style="max-height: 225px;" alt="Trendy Pants and Shoes"
+          class="img-fluid rounded-start" />
       </div>
       <div class="col-md-9">
         <div class="card-body">
