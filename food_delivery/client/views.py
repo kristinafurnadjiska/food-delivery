@@ -152,7 +152,7 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         method = data['method']
         is_paid = method == 'card';
 
-        order = Order.objects.create(method=method, price=price, address=address, is_paid=is_paid)
+        order = Order.objects.create(method=method, price=price, address=address, is_paid=is_paid, restaurant=items[0].restaurant)
         for item in items:
             OrderItem.objects.create(order=order, meal=item.meal, quantity=item.quantity)
             item.delete()

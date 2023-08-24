@@ -45,6 +45,7 @@ class Order(models.Model):
     price = models.IntegerField()
     address = models.CharField(max_length=100)
     is_paid = models.BooleanField(default=False)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'Order: {self.created_on.strftime("%b %d %I: %M %p")}'

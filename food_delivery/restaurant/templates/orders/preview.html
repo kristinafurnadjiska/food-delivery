@@ -1,0 +1,61 @@
+{% extends "shared/base.html" %}
+{% load crispy_forms_tags %}
+{% load mathfilters %}
+
+{% block header %}
+{% include 'shared/header-restaurant.html' %}
+{% endblock header %}
+
+{% block content %}
+<article class="container mb-5">
+  <div class="h-100 d-flex flex-column justify-content-center align-items-center">
+    <h1>Order #{{ item.pk }}</h1>
+
+    <div class="row w-100">
+      {% for item in meals %}
+      <div class=" col-md-6">
+        <div class="card mb-3 mt-3 bg-card" style="max-width: 1080px; height: 120px;">
+          <div class="row g-0">
+            <div class="col-md-3 overflow-hidden rounded-start">
+              <img src="{{ item.meal.image.url }}" height="120" class="w-100"
+                style="object-fit: cover; object-position: center;" />
+            </div>
+            <div class="col-md-7">
+              <div class="card-body">
+                <h5 class="card-title">{{ item.meal.name }}</h5>
+
+                <p>{{ item.quantity}} x {{ item.meal.price }} = {{ item.quantity|mul:item.meal.price}} MKD</p>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="container mt-4">
+      <div class="article-metadata text-center">
+        <h4 class="mr-2"><b>Address:</b> {{ item.address }}</h4>
+        <h4 class="mr-2"><b>Total:</b> {{ item.price }}</h4>
+        {% if item.status == 'Delivered' %}
+        <h4 class="mr-2"><b>Status:</b> {{ item.status }}</h4>
+        {% else %}
+        <div class="d-flex justify-content-center">
+          <form method="POST" class="w-50">
+            {% csrf_token %}
+            <fieldset class="form-group m-0">
+              {{ form|crispy }}
+            </fieldset>
+
+            <button class="btn bg-green text-white" type="submit">Update</button>
+          </form>
+        </div>
+      </div>
+      {% endif %}
+
+
+    </div>
+  </div>
+</article>
+{% endblock content %}

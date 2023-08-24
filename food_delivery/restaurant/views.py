@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from .models import Restaurant, Meal
+from .models import Restaurant, Meal, Order, OrderItem
 from users.models import Profile
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import CreateView, UpdateView, DeleteView
@@ -39,7 +39,10 @@ class RestaurantPreview(LoginRequiredMixin, UserPassesTestMixin, View):
     
     def get(self, request):
         owner = Profile.objects.get(user=self.request.user.pk)
-        restaurant = Restaurant.objects.get(owner=owner.pk)
+        try:
+            restaurant = Restaurant.objects.get(owner=owner)
+        except Restaurant.DoesNotExist:
+            return redirect('restaurant-setup')
         items = Meal.objects.filter(restaurant=restaurant)
 
         context = {
@@ -109,3 +112,46 @@ class MealDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         profile = Profile.objects.get(user=self.request.user.pk)
         return profile.is_owner()
+
+class OrdersPreview(LoginRequiredMixin, UserPassesTestMixin, View):
+    def test_func(self):
+        profile = Profile.objects.get(user=self.request.user.pk)
+        return profile.is_owner()
+
+    def get(self, request):
+        owner = Profile.objects.get(user=self.request.user.pk)
+        try:
+            restaurant = Restaurant.objects.get(owner=owner)
+        except Restaurant.DoesNotExist:
+            return redirect('restaurant-setup')
+        
+        orders = Order.objects.filter(restaurant=restaurant)
+
+        context = {
+            'items': orders
+        }
+
+        return render(request, 'orders/index.html', context)
+    
+class OrderPreview(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    success_url = '/restaurants/orders'
+    model = Order
+    template_name = 'orders/preview.html'
+    fields = ['status']
+
+    def test_func(self):
+        profile = Profile.objects.get(user=self.request.user.pk)
+        return profile.is_owner()
+    
+    def get_context_data(self, **kwargs):
+        id = int(self.request.path.split('/')[-1])
+        order = Order.objects.get(pk=id)
+
+        context = super().get_context_data(**kwargs)
+
+        meals = OrderItem.objects.filter(order=order);
+
+        context['item'] = order
+        context['meals'] = meals
+
+        return context

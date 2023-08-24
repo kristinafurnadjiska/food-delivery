@@ -1,0 +1,37 @@
+{% extends "shared/base.html" %}
+
+{% block header %}
+{% include 'shared/header-restaurant.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="container mb-5">
+  <div class="row justify-content-center">
+    <div class="text-center">
+      <h1>Orders</h1>
+    </div>
+  </div>
+
+  {% if not items %}
+  <div class="text-center">
+    <h3>Currently there are no orders!</h3>
+  </div>
+  {% endif %}
+
+  <div class="row">
+    {% for item in items %}
+    <div class="col-md-6">
+      <a class="card mb-3 mt-3 bg-card" style="max-width: 1080px;" href="{% url 'restaurant-order-preview' item.pk %}">
+        <div class="card-body">
+          <h5>Deliver to '{{ item.address }}'</h5>
+          <p class="card-text">Status: {{ item.status }}</p>
+          <p class="card-text">
+            <small class="text-muted">Total: {{ item.price }}</small>
+          </p>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
