@@ -5,7 +5,7 @@ Food delivery django python application
 - git clone https://github.com/kristinafurnadjiska/food-delivery.git
 - cd food-delivery
 - python -m venv venv
-- source venv/bin/activate
+- source venv/bin/activate (unix) or venv\Scripts\activate (windows)
 - cd food_delivery
 - pip install -r requirements.txt
 - python manage.py migrate   

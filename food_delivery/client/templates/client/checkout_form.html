@@ -16,7 +16,7 @@
 
     <fieldset id="card_details" class="form-group">
       <div class="form-group">
-        <label for="id_card_holder" class="requiredField">
+        <label for="id_card_holder">
           Card Holder
           <span class="asteriskField">*</span>
         </label>
@@ -26,34 +26,34 @@
       </div>
 
       <div class="form-group">
-        <label for="id_card_number" class="requiredField">
+        <label for="id_card_number">
           Card Number
           <span class="asteriskField">*</span>
         </label>
         <div>
-          <input type="text" name="card_holder" class="textinput form-control" required="" id="id_card_number"
+          <input type="text" name="card_number" class="textinput form-control" required="" id="id_card_number"
             placeholder="1234 1234 1234 1234">
         </div>
       </div>
 
       <div class="row">
         <div class="form-group col-md-6">
-          <label for="id_ccv" class="requiredField">
+          <label for="id_ccv">
             CCV
             <span class="asteriskField">*</span>
           </label>
           <div>
-            <input type="text" name="card_holder" class="textinput form-control" required="" id="id_ccv">
+            <input type="text" name="ccv" class="textinput form-control" required="" id="id_ccv">
           </div>
         </div>
 
         <div class="form-group col-md-6">
-          <label for="id_expiry" class="requiredField">
+          <label for="id_expiry">
             Expiry
             <span class="asteriskField">*</span>
           </label>
           <div>
-            <input type="text" name="card_holder" class="textinput form-control" required="" id="id_expiry">
+            <input type="text" name="expiry" class="textinput form-control" required="" id="id_expiry">
           </div>
         </div>
       </div>
@@ -66,12 +66,32 @@
   window.addEventListener("load", (event) => {
     const method = document.getElementById("id_method");
     const details = document.getElementById("card_details");
+    const holder = document.getElementById("id_card_holder");
+    const number = document.getElementById("id_card_number");
+    const ccv = document.getElementById("id_ccv");
+    const expiry = document.getElementById("id_expiry");
 
     details.style.display = 'none';
+    holder.setAttribute('required', false)
+    number.setAttribute('required', false)
+    ccv.setAttribute('required', false)
+    expiry.setAttribute('required', false)
 
     method.addEventListener('change', function (event) {
-      const isCash = event.target.value === 'cash'
-      details.style.display = isCash ? 'none' : 'block';
+      const isCard = event.target.value === 'card'
+      details.style.display = !isCard ? 'none' : 'block';
+
+      if (!isCard) {
+        holder.removeAttribute('required');
+        number.removeAttribute('required');
+        ccv.removeAttribute('required');
+        expiry.removeAttribute('required');
+      } else {
+        holder.setAttribute('required', true)
+        number.setAttribute('required', true)
+        ccv.setAttribute('required', true)
+        expiry.setAttribute('required', true)
+      }
     })
   });
 </script>
